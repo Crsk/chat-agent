@@ -1,11 +1,12 @@
-from langgraph.graph import StateGraph, END
-from typing import TypedDict, List
+from typing import TypedDict
+
+from langgraph.graph import END, StateGraph
 
 
 class AgentState(TypedDict):
-    messages: List[str]
+    messages: list[str]
     current_task: str
-    completed_tasks: List[str]
+    completed_tasks: list[str]
 
 
 def reasoning_node(state: AgentState) -> AgentState:
@@ -25,7 +26,7 @@ def reasoning_node(state: AgentState) -> AgentState:
         return {
             "messages": messages,
             "current_task": "",
-            "completed_tasks": completed_tasks
+            "completed_tasks": completed_tasks,
         }
 
     return state
@@ -45,22 +46,17 @@ def create_simple_agent():
     workflow = StateGraph(AgentState)
 
     # Add nodes
-    workflow.add_node("reasoning", reasoning_node)
+    workflow.add_node("reasoning", reasoning_node)  # type: ignore[arg-type]
 
     # Set entry point
     workflow.set_entry_point("reasoning")
 
     # Add conditional edges
     workflow.add_conditional_edges(
-        "reasoning",
-        should_continue,
-        {
-            "continue": "reasoning",
-            "end": END
-        }
+        "reasoning", should_continue, {"continue": "reasoning", "end": END}
     )
 
-    return workflow.compile()
+    return workflow.compile()  # type: ignore[return-value]
 
 
 def run_agent_example():
@@ -71,11 +67,11 @@ def run_agent_example():
     initial_state = {
         "messages": ["Agent starting up..."],
         "current_task": "analyze data",
-        "completed_tasks": []
+        "completed_tasks": [],
     }
 
     # Run the agent
-    result = agent.invoke(initial_state)
+    result = agent.invoke(initial_state)  # type: ignore[arg-type]
 
     print("Agent execution completed!")
     print(f"Messages: {result['messages']}")

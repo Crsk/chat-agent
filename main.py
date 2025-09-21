@@ -1,5 +1,5 @@
-from src.simple_agent import run_agent_example
 from src.chat_agent import run_chat_example
+from src.simple_agent import run_agent_example
 
 
 def main():

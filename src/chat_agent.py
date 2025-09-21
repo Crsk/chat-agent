@@ -1,19 +1,20 @@
-from langchain_openai import ChatOpenAI
-from langchain.schema import HumanMessage, AIMessage, SystemMessage
-from langgraph.graph import StateGraph, END
-from typing import TypedDict, List, Optional
 import os
+from typing import Any, TypedDict
+
 from dotenv import load_dotenv
+from langchain.schema import HumanMessage, SystemMessage
+from langchain_openai import ChatOpenAI  # type: ignore[import-not-found]
+from langgraph.graph import END, StateGraph
 
 # Load environment variables from .env file
 load_dotenv()
 
 
 class ChatState(TypedDict):
-    messages: List[str]
-    chat_history: List[dict]
-    user_input: Optional[str]
-    response: Optional[str]
+    messages: list[str]
+    chat_history: list[dict[str, Any]]
+    user_input: str | None
+    response: str | None
 
 
 def chat_node(state: ChatState) -> ChatState:
@@ -22,14 +23,12 @@ def chat_node(state: ChatState) -> ChatState:
     # Check for OpenRouter API key (fallback to OpenAI key name for compatibility)
     api_key = os.getenv("OPENROUTER_API_KEY") or os.getenv("OPENAI_API_KEY")
     if not api_key:
-        response = "Error: OPENROUTER_API_KEY or OPENAI_API_KEY environment variable not set"
+        response = (
+            "Error: OPENROUTER_API_KEY or OPENAI_API_KEY environment variable not set"
+        )
         messages = state.get("messages", [])
         messages.append(response)
-        return {
-            **state,
-            "messages": messages,
-            "response": response
-        }
+        return {**state, "messages": messages, "response": response}
 
     user_input = state.get("user_input")
     if not user_input:
@@ -37,22 +36,24 @@ def chat_node(state: ChatState) -> ChatState:
 
     try:
         # Initialize the LLM with OpenRouter
-        llm = ChatOpenAI(
+        llm = ChatOpenAI(  # type: ignore[misc]
             model="openai/gpt-5-mini",
             temperature=0.7,
             openai_api_key=api_key,
-            openai_api_base="https://openrouter.ai/api/v1"
+            openai_api_base="https://openrouter.ai/api/v1",
         )
 
         # Prepare messages
         chat_messages = [
-            SystemMessage(content="You are a helpful assistant. Keep responses concise and friendly."),
-            HumanMessage(content=user_input)
+            SystemMessage(
+                content="You are a helpful assistant. Keep responses concise."
+            ),
+            HumanMessage(content=user_input),
         ]
 
         # Get response from OpenAI
-        response = llm.invoke(chat_messages)
-        response_text = response.content
+        response = llm.invoke(chat_messages)  # type: ignore[misc]
+        response_text = response.content  # type: ignore[misc]
 
         # Update state
         messages = state.get("messages", [])
@@ -68,18 +69,14 @@ def chat_node(state: ChatState) -> ChatState:
             "messages": messages,
             "chat_history": chat_history,
             "response": response_text,
-            "user_input": None
+            "user_input": None,
         }
 
     except Exception as e:
-        error_msg = f"Error: {str(e)}"
+        error_msg = f"Error: {e!s}"
         messages = state.get("messages", [])
         messages.append(error_msg)
-        return {
-            **state,
-            "messages": messages,
-            "response": error_msg
-        }
+        return {**state, "messages": messages, "response": error_msg}
 
 
 def should_continue_chat(state: ChatState) -> str:
@@ -96,22 +93,17 @@ def create_chat_agent():
     workflow = StateGraph(ChatState)
 
     # Add nodes
-    workflow.add_node("chat", chat_node)
+    workflow.add_node("chat", chat_node)  # type: ignore[arg-type]
 
     # Set entry point
     workflow.set_entry_point("chat")
 
     # Add conditional edges
     workflow.add_conditional_edges(
-        "chat",
-        should_continue_chat,
-        {
-            "continue": "chat",
-            "end": END
-        }
+        "chat", should_continue_chat, {"continue": "chat", "end": END}
     )
 
-    return workflow.compile()
+    return workflow.compile()  # type: ignore[return-value]
 
 
 def run_chat_example():
@@ -119,13 +111,13 @@ def run_chat_example():
     agent = create_chat_agent()
 
     print("Chat Agent started! Type 'quit' to exit.")
-    print("Note: Make sure OPENROUTER_API_KEY or OPENAI_API_KEY is set in your environment.")
+    print("Note: Make sure OPENROUTER_API_KEY or OPENAI_API_KEY is set.")
 
-    state = {
+    state: ChatState = {
         "messages": [],
         "chat_history": [],
         "user_input": None,
-        "response": None
+        "response": None,
     }
 
     while True:
@@ -134,10 +126,10 @@ def run_chat_example():
             break
 
         state["user_input"] = user_input
-        result = agent.invoke(state)
+        result = agent.invoke(state)  # type: ignore[arg-type]
 
         print(f"Assistant: {result.get('response', 'No response')}")
-        state = result
+        state = result  # type: ignore[assignment]
 
 
 if __name__ == "__main__":
