@@ -10,6 +10,14 @@
   - Run: `uv run pyright src/ tests/`
 - **Testing**: pytest with coverage
   - Run: `uv run pytest tests/ -v --cov=src`
+- **Security**: Bandit for security issues
+  - Run: `uv run bandit -r src/`
+- **Documentation**: Interrogate for docstring coverage
+  - Run: `uv run interrogate src/`
+- **Dead Code**: Vulture for unused code detection
+  - Run: `uv run vulture src/`
+- **Vulnerability Scanning**: Safety for dependency vulnerabilities
+  - Run: `uv run safety check`
 
 # Pre-commit Hooks
 - Installed and configured for automated quality checks

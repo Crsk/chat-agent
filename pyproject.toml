@@ -19,6 +19,10 @@ dev = [
     "pytest>=8.0.0",
     "pytest-cov>=6.0.0",
     "pre-commit>=4.0.0",
+    "interrogate>=1.7.0",
+    "vulture>=2.13",
+    "safety>=3.0.0",
+    "bandit>=1.7.10",
 ]
 
 [build-system]
@@ -112,6 +116,38 @@ exclude_lines = [
     "class .*\\bProtocol\\):",
     "@(abc\\.)?abstractmethod",
 ]
+
+[tool.interrogate]
+ignore-init-method = true
+ignore-init-module = false
+ignore-magic = false
+ignore-semiprivate = false
+ignore-private = false
+ignore-property-decorators = false
+ignore-module = false
+ignore-nested-functions = false
+ignore-nested-classes = true
+fail-under = 80
+exclude = ["setup.py", "docs", "build"]
+ignore-regex = ["^get$", "^mock_.*", ".*BaseClass.*"]
+verbose = 0
+quiet = false
+whitelist-regex = []
+color = true
+
+[tool.vulture]
+exclude = ["tests/", "docs/", "build/", "dist/"]
+ignore_decorators = ["@app.route", "@require_*"]
+ignore_names = ["_*", "test_*"]
+make_whitelist = true
+min_confidence = 80
+paths = ["src/"]
+sort_by_size = true
+verbose = false
+
+[tool.bandit]
+exclude_dirs = ["tests", "build", "dist"]
+skips = ["B101", "B601"]
 
 [dependency-groups]
 dev = [

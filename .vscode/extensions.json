@@ -1,0 +1,21 @@
+{
+  "recommendations": [
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "charliermarsh.ruff",
+    "ms-python.mypy-type-checker",
+    "ms-vscode.test-adapter-converter",
+    "littlefoxteam.vscode-python-test-adapter",
+    "ms-vscode.vscode-json",
+    "redhat.vscode-yaml",
+    "tamasfe.even-better-toml",
+    "github.vscode-github-actions",
+    "eamodio.gitlens",
+    "ms-vsliveshare.vsliveshare"
+  ],
+  "unwantedRecommendations": [
+    "ms-python.flake8",
+    "ms-python.pylint",
+    "ms-python.black-formatter"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "python.defaultInterpreterPath": "./.venv/bin/python",
+  "python.terminal.activateEnvironment": true,
+  "python.linting.enabled": false,
+  "python.formatting.provider": "none",
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.ruff": "explicit",
+      "source.organizeImports.ruff": "explicit"
+    }
+  },
+  "ruff.path": ["./venv/bin/ruff"],
+  "ruff.importStrategy": "fromEnvironment",
+  "pyright.path": ["./venv/bin/pyright"],
+  "python.testing.pytestEnabled": true,
+  "python.testing.pytestArgs": ["tests", "-v", "--cov=src"],
+  "python.testing.unittestEnabled": false,
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/*.pyc": true,
+    "**/*.pyo": true,
+    "**/build": true,
+    "**/dist": true,
+    "**/*.egg-info": true,
+    ".pytest_cache": true,
+    ".ruff_cache": true,
+    ".mypy_cache": true
+  },
+  "editor.rulers": [88],
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true
+}
