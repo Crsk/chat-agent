@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from langchain.schema import HumanMessage, SystemMessage
 from langchain_openai import ChatOpenAI  # type: ignore[import-not-found]
 from langgraph.graph import END, StateGraph
+from pydantic import SecretStr
 
 # Load environment variables from .env file
 load_dotenv()
@@ -28,7 +29,12 @@ def chat_node(state: ChatState) -> ChatState:
         )
         messages = state.get("messages", [])
         messages.append(response)
-        return {**state, "messages": messages, "response": response}
+        return ChatState(
+            messages=messages,
+            chat_history=state.get("chat_history", []),
+            user_input=state.get("user_input"),
+            response=response,
+        )
 
     user_input = state.get("user_input")
     if not user_input:
@@ -39,8 +45,8 @@ def chat_node(state: ChatState) -> ChatState:
         llm = ChatOpenAI(  # type: ignore[misc]
             model="openai/gpt-5-mini",
             temperature=0.7,
-            openai_api_key=api_key,
-            openai_api_base="https://openrouter.ai/api/v1",
+            api_key=SecretStr(api_key),
+            base_url="https://openrouter.ai/api/v1",
         )
 
         # Prepare messages
@@ -53,7 +59,13 @@ def chat_node(state: ChatState) -> ChatState:
 
         # Get response from OpenAI
         response = llm.invoke(chat_messages)  # type: ignore[misc]
-        response_text = response.content  # type: ignore[misc]
+        # Handle response content that can be various types
+        content = response.content  # type: ignore[misc]
+        if isinstance(content, str):
+            response_text = content
+        else:
+            # Handle list or other types by converting to string
+            response_text = str(content) if content else ""  # type: ignore[misc]
 
         # Update state
         messages = state.get("messages", [])
@@ -64,19 +76,23 @@ def chat_node(state: ChatState) -> ChatState:
         chat_history.append({"type": "user", "content": user_input})
         chat_history.append({"type": "assistant", "content": response_text})
 
-        return {
-            **state,
-            "messages": messages,
-            "chat_history": chat_history,
-            "response": response_text,
-            "user_input": None,
-        }
+        return ChatState(
+            messages=messages,
+            chat_history=chat_history,
+            user_input=None,
+            response=response_text,
+        )
 
     except Exception as e:
         error_msg = f"Error: {e!s}"
         messages = state.get("messages", [])
         messages.append(error_msg)
-        return {**state, "messages": messages, "response": error_msg}
+        return ChatState(
+            messages=messages,
+            chat_history=state.get("chat_history", []),
+            user_input=state.get("user_input"),
+            response=error_msg,
+        )
 
 
 def should_continue_chat(state: ChatState) -> str:
