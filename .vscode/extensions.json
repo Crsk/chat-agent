@@ -9,8 +9,7 @@
     "redhat.vscode-yaml",
     "tamasfe.even-better-toml",
     "github.vscode-github-actions",
-    "eamodio.gitlens",
-    "ms-vsliveshare.vsliveshare"
+    "eamodio.gitlens"
   ],
   "unwantedRecommendations": [
     "ms-python.flake8",
