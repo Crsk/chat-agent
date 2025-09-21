@@ -47,7 +47,7 @@ class ChatRunner:
 
     def _display_response(self, state: ChatState) -> None:
         """Display the assistant's response."""
-        response = state.get("response", "No response")
+        response = state.get("response") or "No response"
         print(f"Assistant: {response}")
 
 

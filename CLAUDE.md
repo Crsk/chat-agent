@@ -32,7 +32,7 @@
 - Result types for error handling
 
 # Code Structure Guidelines
-- **NO __init__.py files**: Avoid package initialization files to keep structure simple
+- **NO __init__.py files in src/**: Avoid package initialization files in source code to keep structure simple (init files in tests/ are OK)
 - **Direct imports**: Use explicit module paths like `from src.chat.models import ChatState`
 - **Feature-based organization**: Group related functionality in focused directories
 - **Single responsibility**: Each module should have one clear purpose

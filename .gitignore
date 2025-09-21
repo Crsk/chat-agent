@@ -38,3 +38,4 @@ vulture_whitelist.py
 
 # Logs
 *.log
+coverage.xml
