@@ -3,7 +3,6 @@
     "ms-python.python",
     "ms-python.vscode-pylance",
     "charliermarsh.ruff",
-    "ms-python.mypy-type-checker",
     "ms-vscode.test-adapter-converter",
     "littlefoxteam.vscode-python-test-adapter",
     "ms-vscode.vscode-json",
