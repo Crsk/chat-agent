@@ -1,3 +1,26 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+# Project Overview
+This is a chat agent application built with LangGraph workflow management, using OpenRouter/OpenAI APIs for LLM interactions. The architecture follows a modular design with clear separation between chat logic, CLI interface, and configuration.
+
+## Core Architecture
+- **Chat Module** (`src/chat/`): Core chat functionality with LangGraph workflow
+  - `workflow.py`: StateGraph-based chat workflow with conditional edges
+  - `models.py`: TypedDict data models (ChatMessage, ChatState)
+  - `llm_client.py`: OpenRouter API client implementation
+  - `message_handler.py`: Message processing logic
+  - `config.py`: Configuration management with environment variable handling
+- **CLI Module** (`src/cli/`): Command-line interface for interactive chat
+  - `chat_runner.py`: Interactive chat session management
+
+## Key Dependencies
+- **LangGraph**: Workflow management and state graphs
+- **LangChain**: LLM integration framework
+- **OpenAI SDK**: API client for OpenRouter/OpenAI
+- **python-dotenv**: Environment variable management
+
 # Development Environment Setup
 - **Python Version**: 3.13.5 via UV package manager
 - **Package Manager**: UV for Python dependencies and version management
@@ -36,3 +59,9 @@
 - **Direct imports**: Use explicit module paths like `from src.chat.models import ChatState`
 - **Feature-based organization**: Group related functionality in focused directories
 - **Single responsibility**: Each module should have one clear purpose
+
+# important-instruction-reminders
+Do what has been asked; nothing more, nothing less.
+NEVER create files unless they're absolutely necessary for achieving your goal.
+ALWAYS prefer editing an existing file to creating a new one.
+NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.
