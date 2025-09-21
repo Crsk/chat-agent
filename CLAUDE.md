@@ -30,3 +30,9 @@
 - Proper generics with TypeVar, ParamSpec for functions/classes
 - Protocol classes for structural typing
 - Result types for error handling
+
+# Code Structure Guidelines
+- **NO __init__.py files**: Avoid package initialization files to keep structure simple
+- **Direct imports**: Use explicit module paths like `from src.chat.models import ChatState`
+- **Feature-based organization**: Group related functionality in focused directories
+- **Single responsibility**: Each module should have one clear purpose
