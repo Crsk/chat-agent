@@ -74,7 +74,11 @@ class TestChatWorkflow:
         mock_handler.process_message.assert_called_once_with(state)
         assert result == {"result": "processed"}
 
-    def test_should_continue_with_continue_input(self) -> None:
+    @patch("src.chat.workflow.OpenRouterClient")
+    @patch("src.chat.workflow.MessageHandler")
+    def test_should_continue_with_continue_input(
+        self, mock_handler: Mock, mock_client: Mock
+    ) -> None:
         """Test should continue with normal input."""
         workflow = ChatWorkflow()
         state: ChatState = {
@@ -87,7 +91,11 @@ class TestChatWorkflow:
         result = workflow._should_continue(state)  # type: ignore[reportPrivateUsage]
         assert result == "continue"
 
-    def test_should_continue_with_quit_commands(self) -> None:
+    @patch("src.chat.workflow.OpenRouterClient")
+    @patch("src.chat.workflow.MessageHandler")
+    def test_should_continue_with_quit_commands(
+        self, mock_handler: Mock, mock_client: Mock
+    ) -> None:
         """Test should continue with quit commands."""
         workflow = ChatWorkflow()
 
@@ -103,7 +111,11 @@ class TestChatWorkflow:
             result = workflow._should_continue(state)  # type: ignore[reportPrivateUsage]
             assert result == "end", f"Failed for command: {command}"
 
-    def test_should_continue_with_no_input(self) -> None:
+    @patch("src.chat.workflow.OpenRouterClient")
+    @patch("src.chat.workflow.MessageHandler")
+    def test_should_continue_with_no_input(
+        self, mock_handler: Mock, mock_client: Mock
+    ) -> None:
         """Test should continue with no user input."""
         workflow = ChatWorkflow()
         state: ChatState = {
@@ -116,7 +128,11 @@ class TestChatWorkflow:
         result = workflow._should_continue(state)  # type: ignore[reportPrivateUsage]
         assert result == "end"
 
-    def test_should_continue_with_empty_input(self) -> None:
+    @patch("src.chat.workflow.OpenRouterClient")
+    @patch("src.chat.workflow.MessageHandler")
+    def test_should_continue_with_empty_input(
+        self, mock_handler: Mock, mock_client: Mock
+    ) -> None:
         """Test should continue with empty user input."""
         workflow = ChatWorkflow()
         state: ChatState = {
